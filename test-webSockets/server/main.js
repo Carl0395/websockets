@@ -5,6 +5,9 @@ var server = require('http').Server(app);
 // Servidor WebSockets
 var io = require('socket.io')(server);
 
+// middleware static de express para usar las variables en otros ficheros
+app.use(express.static('public'));
+
 /*Array de mensajes que se enviaran cuando se conecten clientes al servidor*/
 var messages = [{
     author: "Carlos",
@@ -20,7 +23,15 @@ var messages = [{
 /*Funcion que permite que el servidor websockets este atento a que se realice una conexion de un cliente*/
 io.on('connection', function (socket) {
     console.log("Un cliente se ha conectado");
-    socket.emit('Messages', messages);
+    socket.emit('Messages', {
+        id: 1,
+        text: "Hola esto es una prueba desde el servidor",
+        author: "Carlos"
+    });
+});
+
+app.get('/', function (req, res) {
+    res.status(200).send("Hola mundo");
 })
 
 
